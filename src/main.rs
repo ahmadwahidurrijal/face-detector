@@ -6,6 +6,7 @@ use opencv::{
     videoio,
     Result,
 };
+use std::time::Instant;
 
 const FACE_CASCADE_PATH: &str = "models/haarcascade_frontalface_default.xml";
 const EYE_CASCADE_PATH: &str = "models/haarcascade_eye.xml";
@@ -106,11 +107,23 @@ fn main() -> Result<()> {
         // 7. Tampilkan hasil
         opencv::highgui::imshow("Face & Eye Detection (Rust + OpenCV)", &frame)?;
 
+        let mut total_time = std::time::Duration::new(0, 0);
+        let frame_count = 100;
+
+        for i in 0..frame_count {
+            let start = Instant::now();
+            // ... proses 1 frame ...
+            total_time += start.elapsed();
+        }
+        let avg_fps = frame_count as f64 / total_time.as_secs_f64();
+        println!("Rata-rata FPS (Rust): {:.2}", avg_fps);
+        
+
         // 8. Keluar jika tekan 'q'
         if opencv::highgui::wait_key(1)? == 113 { // ASCII 'q'
             break;
         }
     }
-
+    
     Ok(())
 }
